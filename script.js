@@ -25,6 +25,8 @@ const elements = {
   endScreen: document.getElementById("end-screen"),
   finalScore: document.getElementById("final-score"),
   correctAnswers: document.getElementById("correct-answers"),
+  missedFlag: document.getElementById("missed-flag"),
+  wikiLink: document.getElementById("wiki-link"),
 };
 
 // fetch flags from the API
@@ -74,6 +76,7 @@ function resetState() {
   elements.flag.style.display = "none";
   elements.stats.style.display = "none";
   elements.game.style.display = "none";
+  elements.wikiIframe.src = "";
   updateUI();
 }
 
@@ -106,6 +109,17 @@ function endGame() {
   elements.flag.style.display = "none"; // hide the flag
   elements.endScreen.style.display = "block";
   elements.finalScore.textContent = state.currentStreak;
+
+  // create and append missed flag
+  let img = document.createElement("img");
+  img.src = state.currentFlag.flagUrl;
+  img.alt = state.currentFlag.country;
+  elements.missedFlag.appendChild(img);
+
+  let p = document.createElement("p");
+  p.textContent = state.currentFlag.country;
+  elements.missedFlag.appendChild(p);
+
   state.correctFlags.forEach((flag) => {
     let div = document.createElement("div");
     let img = document.createElement("img");
@@ -117,8 +131,17 @@ function endGame() {
     div.appendChild(p);
     elements.correctAnswers.appendChild(div);
   });
+
+  // Set the link for the wiki page and make it visible
+  elements.wikiLink.href = `https://en.wikipedia.org/wiki/${state.currentFlag.country.replace(
+    " ",
+    "_"
+  )}`;
+  elements.wikiLink.textContent = `Learn more about ${state.currentFlag.country}`;
+  elements.wikiLink.style.display = "block";
+
   fadeIn(elements.endScreen); // Fade in the end screen
-  elements.restartButton.style.display = "block";
+  elements.restartEndButton.style.display = "block";
 }
 
 // get the next flag and display options
