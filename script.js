@@ -1,242 +1,251 @@
 // state object to store the game state
 const state = {
-  flags: [], // array to store all the flags fetched from the API
-  usedFlags: [], // array to store the flags that have been used in the game
-  correctFlags: [], // array to store the flags that have been correctly guessed
-  currentFlag: null, // object to store the current flag being displayed
-  currentStreak: 0, // number to track the current streak of correct guesses
-  bestStreak: JSON.parse(localStorage.getItem("bestStreak")) || 0, // number to track the best streak of correct guesses, retrieved from local storage
-  timeLeft: 15, // number to track the time left in seconds
-  timer: null, // variable to store the timer interval ID
+  flags: [],
+  usedFlags: [],
+  correctFlags: [],
+  currentFlag: null,
+  currentStreak: 0,
+  bestStreak: JSON.parse(localStorage.getItem("bestStreak")) || 0,
+  timeLeft: 15,
+  timer: null,
 };
 
 // object to store the UI elements
 const elements = {
-  stats: document.getElementById("stats"), // reference to the stats container element
-  game: document.getElementById("game"), // reference to the game container element
-  flag: document.getElementById("flag"), // reference to the flag image element
-  options: document.getElementById("options"), // reference to the options container element
-  startButton: document.getElementById("start"), // reference to the start button element
-  restartButton: document.getElementById("restart"), // reference to the restart button element
-  restartEndButton: document.getElementById("restart-end"), // reference to the restart button on the end screen element
-  currentStreak: document.getElementById("current-streak"), // reference to the current streak element
-  bestStreak: document.getElementById("best-streak"), // reference to the best streak element
-  timer: document.getElementById("timer"), // reference to the timer element
-  endScreen: document.getElementById("end-screen"), // reference to the end screen element
-  finalScore: document.getElementById("final-score"), // reference to the final score element
-  correctAnswers: document.getElementById("correct-answers"), // reference to the container for correct answers element
+  stats: document.getElementById("stats"),
+  game: document.getElementById("game"),
+  flag: document.getElementById("flag"),
+  options: document.getElementById("options"),
+  startButton: document.getElementById("start"),
+  restartButton: document.getElementById("restart"),
+  restartEndButton: document.getElementById("restart-end"),
+  currentStreak: document.getElementById("current-streak"),
+  bestStreak: document.getElementById("best-streak"),
+  timer: document.getElementById("timer"),
+  endScreen: document.getElementById("end-screen"),
+  finalScore: document.getElementById("final-score"),
+  correctAnswers: document.getElementById("correct-answers"),
 };
 
 // fetch flags from the API
 async function fetchFlags() {
   try {
-    const response = await fetch("https://restcountries.com/v2/all"); // make a request to the API to fetch all country flags
-    const data = await response.json(); // parse the response as JSON
+    const response = await fetch("https://restcountries.com/v2/all");
+    const data = await response.json();
     state.flags = data.map((country) => {
       if (!country.flags || !country.flags.png)
-        throw new Error("Invalid country data"); // if the country data doesn't contain flag information, throw an error
+        throw new Error("Invalid country data");
       return {
-        country: country.name, // store the country name
-        flagUrl: country.flags.png, // store the URL of the flag image
+        country: country.name,
+        flagUrl: country.flags.png,
       };
     });
   } catch (error) {
-    console.error("Failed to fetch flags:", error); // log an error message if fetching flags fails
+    console.error("Failed to fetch flags:", error);
   }
 }
 
 // start the game
 function startGame() {
-  elements.startButton.style.display = "none"; // hide the start button
-  elements.stats.style.display = "block"; // show the stats container
-  elements.game.style.display = "block"; // show the game container
-  elements.flag.style.display = "block"; // show the flag image
-  fadeIn(elements.flag); // fade in the flag image
-  nextFlag(); // display the next flag
-  updateUI(); // update the UI elements
-  startTimer(); // start the timer
+  elements.startButton.style.display = "none";
+  elements.stats.style.display = "block";
+  elements.game.style.display = "block";
+  elements.flag.style.display = "block";
+  fadeIn(elements.flag); // Fade in the flag
+  nextFlag();
+  updateUI();
+  startTimer();
 }
 
 // reset the game state and update UI
 function resetState() {
-  state.flags = [...state.usedFlags, ...state.correctFlags, ...state.flags]; // combine the used flags, correct flags, and remaining flags
-  state.usedFlags = []; // clear the used flags
-  state.correctFlags = []; // clear the correct flags
-  state.currentFlag = null; // clear the current flag
-  state.currentStreak = 0; // reset the current streak
-  state.timeLeft = 15; // reset the time left
-  if (state.timer) clearInterval(state.timer); // clear the timer interval if it exists
-  elements.endScreen.style.display = "none"; // hide the end screen
-  elements.restartButton.style.display = "none"; // hide the restart button
-  elements.startButton.style.display = "block"; // show the start button
-  elements.options.innerHTML = ""; // clear the options container
-  elements.correctAnswers.innerHTML = ""; // clear the correct answers container
-  elements.flag.style.display = "none"; // hide the flag image
-  elements.stats.style.display = "none"; // hide the stats container
-  elements.game.style.display = "none"; // hide the game container
-  updateUI(); // update the UI elements
+  state.flags = [...state.usedFlags, ...state.correctFlags, ...state.flags];
+  state.usedFlags = [];
+  state.correctFlags = [];
+  state.currentFlag = null;
+  state.currentStreak = 0;
+  state.timeLeft = 15;
+  if (state.timer) clearInterval(state.timer);
+  elements.endScreen.style.display = "none";
+  elements.restartButton.style.display = "none";
+  elements.startButton.style.display = "block";
+  elements.options.innerHTML = "";
+  elements.correctAnswers.innerHTML = "";
+  elements.flag.style.display = "none";
+  elements.stats.style.display = "none";
+  elements.game.style.display = "none";
+  updateUI();
 }
 
 // update the UI based on the game state
 function updateUI() {
-  elements.currentStreak.textContent = state.currentStreak; // update the current streak text
-  elements.bestStreak.textContent = state.bestStreak; // update the best streak text
-  elements.timer.textContent = state.timeLeft; // update the timer text
+  elements.currentStreak.textContent = state.currentStreak;
+  elements.bestStreak.textContent = state.bestStreak;
+  elements.timer.textContent = state.timeLeft;
 }
 
 // start the timer
 function startTimer() {
-  if (state.timer) clearInterval(state.timer); // clear any existing timer
+  if (state.timer) clearInterval(state.timer); // Ensure no other timer is running
 
   state.timer = setInterval(() => {
-    state.timeLeft--; // decrement the time left
-    updateUI(); // update the UI elements
+    state.timeLeft--;
+    updateUI();
     if (state.timeLeft <= 0) {
-      clearInterval(state.timer); // clear the timer interval
-      endGame(); // end the game when time runs out
+      clearInterval(state.timer);
+      endGame();
     }
-  }, 1000); // run the timer every second (1000 milliseconds)
+  }, 1000);
 }
 
 // end the game
 function endGame() {
-  clearInterval(state.timer); // clear the timer interval
+  clearInterval(state.timer);
   elements.game.style.display = "none"; // hide the game container
-  elements.stats.style.display = "none"; // hide the stats container
-  elements.flag.style.display = "none"; // hide the flag image
-  elements.endScreen.style.display = "block"; // show the end screen
-  elements.finalScore.textContent = state.currentStreak; // display the final score
+  elements.stats.style.display = "none"; // hide the stats
+  elements.flag.style.display = "none"; // hide the flag
+  elements.endScreen.style.display = "block";
+  elements.finalScore.textContent = state.currentStreak;
   state.correctFlags.forEach((flag) => {
-    let div = document.createElement("div"); // create a div element
-    let img = document.createElement("img"); // create an img element
-    img.src = flag.flagUrl; // set the flag image source
-    img.alt = flag.country; // set the alt text for the flag image
-    let p = document.createElement("p"); // create a p element
-    p.textContent = flag.country; // set the text content for the p element
-    div.appendChild(img); // append the img element to the div
-    div.appendChild(p); // append the p element to the div
-    elements.correctAnswers.appendChild(div); // append the div to the correct answers container
+    let div = document.createElement("div");
+    let img = document.createElement("img");
+    img.src = flag.flagUrl;
+    img.alt = flag.country;
+    let p = document.createElement("p");
+    p.textContent = flag.country;
+    div.appendChild(img);
+    div.appendChild(p);
+    elements.correctAnswers.appendChild(div);
   });
-  fadeIn(elements.endScreen); // fade in the end screen
-  elements.restartButton.style.display = "block"; // show the restart button
+  fadeIn(elements.endScreen); // Fade in the end screen
+  elements.restartButton.style.display = "block";
 }
 
 // get the next flag and display options
 function nextFlag() {
+  // if there are no more flags, end the game
   if (state.flags.length === 0) {
-    // if there are no more flags, end the game
     endGame();
     return;
   }
 
-  const flagIndex = Math.floor(Math.random() * state.flags.length); // generate a random index to select a flag
-  const flag = state.flags[flagIndex]; // get the flag at the random index
-  state.currentFlag = flag; // set the current flag
+  // select a random flag
+  const flagIndex = Math.floor(Math.random() * state.flags.length);
+  const flag = state.flags[flagIndex];
+  state.currentFlag = flag;
 
   fadeOut(elements.flag, () => {
-    // fade out the current flag
-    elements.flag.src = flag.flagUrl; // set the source of the flag image to the new flag
-    fadeIn(elements.flag); // fade in the new flag
+    // Fade out the current flag
+    elements.flag.src = flag.flagUrl; // Display the new flag image
+    fadeIn(elements.flag); // Fade in the new flag
   });
 
-  state.flags.splice(flagIndex, 1); // remove the selected flag from the flags array
-  state.usedFlags.push(flag); // add the flag to the used flags array
+  // remove the selected flag from the array
+  state.flags.splice(flagIndex, 1);
+  state.usedFlags.push(flag);
 
-  clearInterval(state.timer); // clear the timer interval
-  state.timeLeft = 15; // reset the time left
-  startTimer(); // start a new timer
+  // reset the timer and start a new one
+  clearInterval(state.timer);
+  state.timeLeft = 15;
+  startTimer();
 
-  displayOptions(); // display the options for the current flag
+  // display options
+  displayOptions();
 }
 
 // display the options for the current flag
 function displayOptions() {
-  elements.options.innerHTML = ""; // clear the options container
+  elements.options.innerHTML = "";
 
-  const options = [state.currentFlag, ...getRandomFlags(3)]; // create an array of options (current flag + 3 random flags)
+  // create an array of options
+  const options = [state.currentFlag, ...getRandomFlags(3)];
 
-  shuffleArray(options); // shuffle the options array
+  // shuffle the options
+  shuffleArray(options);
 
+  // create a button for each option
   options.forEach((option) => {
-    const button = document.createElement("button"); // create a button element
-    button.textContent = option.country; // set the button text to the country name
-    button.addEventListener("click", () => handleGuess(option)); // add a click event listener to the button
-    elements.options.appendChild(button); // append the button to the options container
+    const button = document.createElement("button");
+    button.textContent = option.country;
+    button.addEventListener("click", () => handleGuess(option));
+    elements.options.appendChild(button);
   });
 }
 
 // get n random flags from the remaining flags
 function getRandomFlags(n) {
-  const flags = [...state.flags]; // create a copy of the flags array
+  const flags = [...state.flags];
   const randomFlags = [];
 
   for (let i = 0; i < n; i++) {
-    if (flags.length === 0) break; // break the loop if there are no more flags
-    const flagIndex = Math.floor(Math.random() * flags.length); // generate a random index to select a flag
-    const flag = flags[flagIndex]; // get the flag at the random index
-    flags.splice(flagIndex, 1); // remove the selected flag from the flags array
-    randomFlags.push(flag); // add the flag to the random flags array
+    if (flags.length === 0) break;
+    const flagIndex = Math.floor(Math.random() * flags.length);
+    const flag = flags[flagIndex];
+    flags.splice(flagIndex, 1);
+    randomFlags.push(flag);
   }
 
-  return randomFlags; // return the array of random flags
+  return randomFlags;
 }
 
 // handle the user's guess
 function handleGuess(guess) {
-  const buttons = Array.from(elements.options.children); // get all the buttons
+  // get all the buttons
+  const buttons = Array.from(elements.options.children);
+  // find the button with the correct answer
   const correctButton = buttons.find(
     (button) => button.textContent === state.currentFlag.country
-  ); // find the button with the correct answer
+  );
 
   if (guess === state.currentFlag) {
-    // if the guess is correct
-    correctButton.classList.add("correct"); // add the "correct" class to the correct button
-    state.currentStreak++; // increment the current streak
+    // correct guess
+    correctButton.classList.add("correct");
+    state.currentStreak++;
     if (state.currentStreak > state.bestStreak) {
-      state.bestStreak = state.currentStreak; // update the best streak if the current streak is greater
-      localStorage.setItem("bestStreak", JSON.stringify(state.bestStreak)); // store the best streak in local storage
+      state.bestStreak = state.currentStreak;
+      localStorage.setItem("bestStreak", JSON.stringify(state.bestStreak));
     }
-    state.correctFlags.push(state.currentFlag); // add the current flag to the correct flags array
+    state.correctFlags.push(state.currentFlag);
     setTimeout(() => {
       fadeOut(elements.flag, () => {
-        // fade out the current flag
-        nextFlag(); // display the next flag
+        // Fade out the current flag
+        nextFlag(); // Move to the next flag
       });
     }, 1000); // wait for 1 second before displaying the next flag
   } else {
-    // if the guess is wrong
-    correctButton.classList.add("correct"); // add the "correct" class to the correct button
+    // wrong guess
+    correctButton.classList.add("correct");
     const wrongButton = buttons.find(
       (button) => button.textContent === guess.country
-    ); // find the button with the wrong answer
-    wrongButton.classList.add("wrong"); // add the "wrong" class to the wrong button
-    wrongButton.classList.add("shake"); // add the "shake" class for shake animation
+    );
+    wrongButton.classList.add("wrong");
+    wrongButton.classList.add("shake"); // Add shake animation
     setTimeout(() => {
-      wrongButton.classList.remove("shake"); // remove the "shake" class after the animation completes
-      endGame(); // end the game
+      wrongButton.classList.remove("shake"); // Remove shake animation after it plays
+      endGame();
     }, 1000); // wait for 1 second before ending the game
   }
-
-  buttons.forEach((button) => (button.disabled = true)); // disable all buttons to prevent further clicks
-  updateUI(); // update the UI elements
+  // disable all buttons to prevent further clicks
+  buttons.forEach((button) => (button.disabled = true));
+  updateUI();
 }
 
 // shuffle an array in place
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; // swap elements to shuffle the array
+    [array[i], array[j]] = [array[j], array[i]];
   }
 }
 
 // fade in an element
 function fadeIn(element) {
-  element.style.opacity = "0"; // set initial opacity to 0
-  element.style.display = "block"; // show the element
+  element.style.opacity = "0";
+  element.style.display = "block";
   let opacity = 0;
-  const duration = 300; // duration of the fade animation in milliseconds
-  const interval = 10; // interval for each frame of the animation in milliseconds
-  const increment = interval / duration; // opacity increment for each frame
+  const duration = 300; // 300 milliseconds
+  const interval = 10; // 10 milliseconds
+  const increment = interval / duration;
 
   const fade = () => {
     opacity += increment;
@@ -254,11 +263,11 @@ function fadeIn(element) {
 
 // fade out an element
 function fadeOut(element, callback) {
-  element.style.opacity = "1"; // set initial opacity to 1
+  element.style.opacity = "1";
   let opacity = 1;
-  const duration = 300; // duration of the fade animation in milliseconds
-  const interval = 10; // interval for each frame of the animation in milliseconds
-  const decrement = interval / duration; // opacity decrement for each frame
+  const duration = 300; // 300 milliseconds
+  const interval = 10; // 10 milliseconds
+  const decrement = interval / duration;
 
   const fade = () => {
     opacity -= decrement;
@@ -278,9 +287,14 @@ function fadeOut(element, callback) {
 }
 
 // event listeners
-elements.startButton.addEventListener("click", startGame); // listen for click event on the start button
-elements.restartButton.addEventListener("click", resetState); // listen for click event on the restart button
-elements.restartEndButton.addEventListener("click", resetState); // listen for click event on the restart button on the end screen
+elements.startButton.addEventListener("click", startGame);
+
+elements.restartButton.addEventListener("click", function () {
+  location.reload();
+});
+elements.restartEndButton.addEventListener("click", function () {
+  location.reload();
+});
 
 // initial fetch of the flags
 fetchFlags();
