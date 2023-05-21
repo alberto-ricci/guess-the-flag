@@ -1,17 +1,16 @@
 /* Global Styles */
 
-/* Set global styles for the body */
 body {
   text-align: center;
   background-color: #f4f4f4;
   font-family: Montserrat, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  font-size: 18px;
 }
 
 /* Stats Container */
 
-/* Set styles for the stats container */
 #stats {
   display: flex;
   justify-content: space-between;
@@ -26,31 +25,26 @@ body {
 
 /* Game Container */
 
-/* Set styles for the game and end screen containers */
 #game,
 #end-screen {
   max-width: 800px;
-  margin: 0 auto; /* Center the container horizontally */
+  margin: 0 auto;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Heading */
-
-/* Set styles for the heading */
 h1 {
   color: #333;
 }
 
 /* Flag Container */
 
-/* Set styles for the flag container */
 .flag-container {
   width: 150px;
   height: 100px;
-  margin: 0 auto 20px; /* Center the container vertically and create space at the bottom */
+  margin: 0 auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,17 +60,16 @@ h1 {
   height: 100%;
   object-fit: contain;
   border: 1px solid #ccc;
-  opacity: 0; /* Hide the flag initially */
-  transition: opacity 0.3s ease; /* Add a smooth transition for opacity */
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 #flag.show {
-  opacity: 1; /* Show the flag */
+  opacity: 1;
 }
 
 /* Options */
 
-/* Set styles for the options container */
 #options {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -86,7 +79,6 @@ h1 {
 
 /* Buttons */
 
-/* Set styles for buttons */
 button {
   padding: 10px 20px;
   font-size: 16px;
@@ -116,12 +108,11 @@ button.wrong {
 
 /* Start and Restart Buttons */
 
-/* Set styles for the start and restart buttons */
 #start,
 #restart,
 #restart-end {
   display: inline-block;
-  margin: 20px auto; /* Center the buttons horizontally */
+  margin: 20px auto;
   padding: 10px 20px;
   background-color: #008cba;
   color: #fff;
@@ -140,14 +131,12 @@ button.wrong {
 
 /* Text */
 
-/* Set styles for text */
 p {
   color: #333;
 }
 
 /* End Screen */
 
-/* Set styles for the end screen */
 #end-screen {
   display: none;
 }
@@ -172,7 +161,6 @@ p {
 
 /* Keyframe Animation */
 
-/* Set keyframe animation for the shake effect */
 @keyframes shake {
   0% { transform: translate(1px, 1px) rotate(0deg); }
   10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -194,11 +182,18 @@ p {
 
 /* Media Queries for Mobile Optimization */
 
-/* Set styles for mobile optimization */
 @media (max-width: 800px) {
+  body {
+    font-size: 16px;
+  }
+
   #game,
   #end-screen {
-    padding: 10px;
+    padding: 5px;
+  }
+
+  h1 {
+    font-size: 1.5em;
   }
 
   .flag-container {
@@ -207,10 +202,30 @@ p {
   }
 
   #options {
-    grid-template-columns: repeat(1, 1fr); /* Change grid-template-columns to a single column */
+    grid-template-columns: repeat(1, 1fr);
   }
 
   #correct-answers {
-    grid-template-columns: repeat(1, 1fr); /* Change grid-template-columns to a single column */
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  button {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  #start,
+  #restart,
+  #restart-end {
+    padding: 5px 10px;
+  }
+
+  p {
+    margin: 5px 0;
+  }
+
+  #stats {
+    flex-direction: column;
+    align-items: center;
   }
 }
