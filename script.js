@@ -6,7 +6,7 @@ const state = {
   currentFlag: null,
   currentStreak: 0,
   bestStreak: JSON.parse(localStorage.getItem("bestStreak")) || 0,
-  timeLeft: 15,
+  timeLeft: 16,
   timer: null,
 };
 
@@ -169,7 +169,7 @@ function nextFlag() {
 
   // reset the timer and start a new one
   clearInterval(state.timer);
-  state.timeLeft = 15;
+  state.timeLeft = 16;
   startTimer();
 
   // display options
