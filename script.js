@@ -36,11 +36,10 @@ async function fetchFlags() {
     const response = await fetch("https://restcountries.com/v2/all");
     const data = await response.json();
     state.flags = data.map((country) => {
-      if (!country.flags || !country.flags.png || !country.capital)
+      if (!country.flags || !country.flags.png)
         throw new Error("Invalid country data");
       return {
         country: country.name,
-        capital: country.capital,
         flagUrl: country.flags.png,
       };
     });
@@ -49,7 +48,6 @@ async function fetchFlags() {
   }
 }
 
-// start the game
 // start the game
 function startGame() {
   elements.startButton.style.display = "none";
@@ -148,13 +146,12 @@ function endGame() {
   elements.wikiLink.textContent = `Learn more about ${state.currentFlag.country}`;
   elements.wikiLink.style.display = "block";
 
-  // Set the link for the Google Maps page and make it visible
+  fadeIn(elements.endScreen); // Fade in the end screen
+  elements.restartEndButton.style.display = "block";
+
   elements.mapsLink.href = getGoogleMapsLink(state.currentFlag.country);
   elements.mapsLink.textContent = `See ${state.currentFlag.country} on Google Maps`;
   elements.mapsLink.style.display = "block";
-
-  fadeIn(elements.endScreen); // Fade in the end screen
-  elements.restartEndButton.style.display = "block";
 }
 
 // get the next flag and display options
@@ -165,21 +162,47 @@ function nextFlag() {
     return;
   }
 
-  // get a random flag
+  // select a random flag
   const flagIndex = Math.floor(Math.random() * state.flags.length);
   const flag = state.flags[flagIndex];
-
-  // update the state
   state.currentFlag = flag;
-  state.usedFlags.push(flag);
+
+  fadeOut(elements.flag, () => {
+    // Fade out the current flag
+    elements.flag.src = flag.flagUrl; // Display the new flag image
+    fadeIn(elements.flag); // Fade in the new flag
+  });
+
+  // remove the selected flag from the array
   state.flags.splice(flagIndex, 1);
+  state.usedFlags.push(flag);
 
-  // update the UI
-  elements.flag.src = flag.flagUrl;
-  elements.flag.alt = flag.country;
+  // reset the timer and start a new one
+  clearInterval(state.timer);
+  state.timeLeft = 16;
+  startTimer();
 
-  // display the options for the current flag
+  // display options
   displayOptions();
+}
+
+// display the options for the current flag
+function displayOptions() {
+  elements.options.innerHTML = "";
+
+  // create an array of options
+  const options = [state.currentFlag, ...getRandomFlags(3)];
+
+  // shuffle the options
+  shuffleArray(options);
+
+  // create a button for each option
+  options.forEach((option) => {
+    const button = document.createElement("button");
+    button.textContent = option.country;
+    button.addEventListener("click", () => handleGuess(option));
+    elements.options.appendChild(button);
+  });
 }
 
 // get n random flags from the remaining flags
@@ -204,7 +227,7 @@ function handleGuess(guess) {
   const buttons = Array.from(elements.options.children);
   // find the button with the correct answer
   const correctButton = buttons.find(
-    (button) => button.textContent === state.currentFlag.capital
+    (button) => button.textContent === state.currentFlag.country
   );
 
   if (guess === state.currentFlag) {

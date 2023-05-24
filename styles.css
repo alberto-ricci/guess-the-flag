@@ -9,11 +9,6 @@ body {
   font-size: 18px;
 }
 
-button.highlighted {
-  background-color: #008cba;
-  color: #fff;
-}
-
 /* Stats Container */
 
 #stats {
@@ -171,11 +166,12 @@ p {
   margin: 0;
 }
 
-/* game over container */
+/* Game Over Container */
+
 .game-over-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: flex-start; 
   max-width: 800px;
   margin: 20px auto;
 }
@@ -184,30 +180,16 @@ p {
   flex: 1;
   padding: 20px;
   background-color: #fff;
-  
   margin: 0 10px;
 }
 
-
 /* Learn More Section */
+
 .learn-more-section {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
-.learn-more-link {
-  text-decoration: none;
-  color: #333;
-  margin: 10px 0;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
-
-.learn-more-link:hover {
-  color: #4285f4;
-}
-
 
 .game-over-container #wiki-iframe {
   width: 100%;
@@ -256,14 +238,6 @@ p {
     height: 150px;
   }
 
-  .game-over-container {
-    flex-direction: column;
-  }
-
-  .game-over-container > div {
-    margin: 10px 0;
-  }
-
   #options {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -291,4 +265,13 @@ p {
     flex-direction: column;
     align-items: center;
   }
+
+  .game-over-container {
+    flex-direction: column;
+  }
+
+  .game-over-container > div {
+    margin: 10px 0;
+  }
+
 }
