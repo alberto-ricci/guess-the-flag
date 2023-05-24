@@ -166,16 +166,29 @@ p {
   margin: 0;
 }
 
+/* Game Over Container */
+
 .game-over-container {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  justify-content: space-between;
+  align-items: flex-start; 
+  max-width: 800px;
+  margin: 20px auto;
 }
-
-
 
 .game-over-container > div {
   flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  margin: 0 10px;
+}
+
+/* Learn More Section */
+
+.learn-more-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game-over-container #wiki-iframe {
@@ -252,4 +265,13 @@ p {
     flex-direction: column;
     align-items: center;
   }
+
+  .game-over-container {
+    flex-direction: column;
+  }
+
+  .game-over-container > div {
+    margin: 10px 0;
+  }
+
 }

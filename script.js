@@ -27,6 +27,7 @@ const elements = {
   correctAnswers: document.getElementById("correct-answers"),
   missedFlag: document.getElementById("missed-flag"),
   wikiLink: document.getElementById("wiki-link"),
+  mapsLink: document.getElementById("maps-link"),
 };
 
 // fetch flags from the API
@@ -101,6 +102,11 @@ function startTimer() {
   }, 1000);
 }
 
+function getGoogleMapsLink(country) {
+  var encodedCountry = encodeURIComponent(country);
+  return `https://www.google.com/maps/search/?api=1&query=${encodedCountry}`;
+}
+
 // end the game
 function endGame() {
   clearInterval(state.timer);
@@ -142,6 +148,10 @@ function endGame() {
 
   fadeIn(elements.endScreen); // Fade in the end screen
   elements.restartEndButton.style.display = "block";
+
+  elements.mapsLink.href = getGoogleMapsLink(state.currentFlag.country);
+  elements.mapsLink.textContent = `See ${state.currentFlag.country} on Google Maps`;
+  elements.mapsLink.style.display = "block";
 }
 
 // get the next flag and display options
