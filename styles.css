@@ -42,8 +42,8 @@ h1, h2 {
 /* Flag Container */
 
 .flag-container {
-  width: 150px;
-  height: 100px;
+  width: 120px;
+  height: 80px;
   margin: 0 auto 20px;
   display: flex;
   align-items: center;
@@ -268,10 +268,13 @@ p {
 
   .game-over-container {
     flex-direction: column;
+    align-items: center;  
   }
 
   .game-over-container > div {
     margin: 10px 0;
+    width: 100%;
+    text-align: center; 
   }
 
 }
