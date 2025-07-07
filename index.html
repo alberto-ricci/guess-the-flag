@@ -1,57 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Guess the Flag</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-</head>
-<body>
-  <!-- Game Container -->
-  <div id="game">
-    <h1>Guess the Flag</h1>
-   
-    <img class="flag" id="flag" style="display: none;">    
-    <div id="options"></div>
-    <button id="start">Start Game</button>
-    <button id="restart" style="display: none;">Restart Game</button>
-    <div id="stats" style="display: none;">
-        <p>Current Streak: <span id="current-streak">0</span></p>
-        <p>Best Streak: <span id="best-streak">0</span></p>
-        <p>Time Left: <span id="timer">15</span></p>
-    </div>
-  </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+		<title>Guess the Flag</title>
+		<link
+			rel="stylesheet"
+			href="styles.css"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body>
+		<p id="loading-message">Loading flags, please wait...</p>
 
-  <!-- End Screen -->
-  <div id="end-screen" style="display: none;">
-    <h1>Game Over!</h1>
-    <p>Your Final Score: <span id="final-score"></span></p>
+		<!-- Game Container -->
+		<div id="game">
+			<h1>Guess the Flag</h1>
 
-    <h2>Correctly Guessed Flags:</h2>
-    <div id="correct-answers"></div>
-    
-    <div class="game-over-container">
-      <div>
-        <h2>Missed Flag</h2>
-        <div id="missed-flag">
-          <img class="flag" style="display: none;">
-          
-        </div>
-      </div>
-      <div id="learn-more" class="learn-more-section">
-        <h2>Learn More</h2>
-        <a id="wiki-link" href="" target="_blank" class="learn-more-link">Learn more about country on Wikipedia</a>
-        <a id="maps-link" href="" target="_blank" class="learn-more-link">See country on Google Maps</a>
-      </div>
-    </div>
-  
-    <button id="restart-end">Restart</button>
-  </div>
+			<img
+				class="flag"
+				id="flag"
+				style="display: none"
+			/>
+			<div id="options"></div>
 
-  <!-- JavaScript -->
-  <script src="script.js"></script>
-</body>
+			<button id="start">Start Game</button>
+			<button
+				id="restart"
+				style="display: none"
+			>
+				Restart Game
+			</button>
+
+			<div
+				id="stats"
+				style="display: none"
+			>
+				<p>Current Streak: <span id="current-streak">0</span></p>
+				<p>Best Streak: <span id="best-streak">0</span></p>
+				<p>Time Left: <span id="timer">15</span></p>
+			</div>
+		</div>
+
+		<!-- End Screen -->
+		<div
+			id="end-screen"
+			style="display: none"
+		>
+			<h1>Game Over!</h1>
+			<p>Your Final Score: <span id="final-score"></span></p>
+
+			<h2>Correctly Guessed Flags:</h2>
+			<div id="correct-answers"></div>
+
+			<div class="game-over-container">
+				<div>
+					<h2>Missed Flag</h2>
+					<div id="missed-flag">
+						<img
+							class="flag"
+							style="display: none"
+						/>
+					</div>
+				</div>
+				<div
+					id="learn-more"
+					class="learn-more-section"
+				>
+					<h2>Learn More</h2>
+					<a
+						id="wiki-link"
+						href=""
+						target="_blank"
+						class="learn-more-link"
+						>Learn more about country on Wikipedia</a
+					>
+					<a
+						id="maps-link"
+						href=""
+						target="_blank"
+						class="learn-more-link"
+						>See country on Google Maps</a
+					>
+				</div>
+			</div>
+
+			<button id="restart-end">Restart</button>
+		</div>
+
+		<script src="script.js"></script>
+	</body>
 </html>
